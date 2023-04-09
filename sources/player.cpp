@@ -17,6 +17,10 @@ namespace ariel
     // }
     int Player::stacksize()
     {
+        if(this->in_game == false)
+        {
+            return 0;
+        }
         return this->player_deck.size()-this->player_hand;
     }
 
@@ -67,5 +71,51 @@ namespace ariel
     void Player::set_state(bool stat)
     {
         this->in_game = stat;
+    }
+    Player::Player(const Player& player)
+    {
+
+    }
+
+
+
+    //tidy
+    Player& Player::operator=(Player&& other) noexcept
+    {
+        if (this == &other)
+        {
+            return *this;
+        }
+
+        this->name = std::move(other.name);
+        this->player_deck = std::move(other.player_deck);
+        this->points = other.points;
+        this->player_hand = other.player_hand;
+        this->in_game = other.in_game;
+
+        return *this;
+    }
+    Player::Player(Player&& other) noexcept
+            : name(std::move(other.name)), 
+            player_deck(std::move(other.player_deck)), 
+            points(other.points), 
+            player_hand(other.player_hand), 
+            in_game(other.in_game)
+        {
+    }
+    Player& Player::operator=(const Player& other)
+    {
+        if (this == &other)
+        {
+            return *this;
+        }
+
+        this->name = other.name;
+        this->player_deck = other.player_deck;
+        this->points = other.points;
+        this->player_hand = other.player_hand;
+        this->in_game = other.in_game;
+
+        return *this;
     }
 }

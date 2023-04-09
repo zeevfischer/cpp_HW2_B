@@ -14,11 +14,15 @@ namespace ariel
         string symbol;
     public:
         card(int card_num,string symbol);
-        card(const card& c);
+        card(const card& card);
         ~card();
-        card(){}
         string get_card_symbol();
         int get_card_num();
         string print();
+
+        //tidy
+        card& operator=(const card& other); // copy assignment operator
+        card(card&& other)noexcept; // move constructor
+        card& operator=(card&& other)noexcept;
     };    
 }

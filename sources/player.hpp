@@ -17,13 +17,12 @@ namespace ariel
         string name;
         vector<card> player_deck;
         int points;
-        unsigned long int player_hand;
+        unsigned long int player_hand = 0;
         bool in_game = false;
     public:
         Player(string name);
-        Player(){}
         ~Player();
-        // Player(const Player& p);
+        Player(const Player& player);
         int stacksize();
         int cardesTaken();
         int get_points();
@@ -36,8 +35,9 @@ namespace ariel
         bool get_state();
         void set_state(bool stat);
 
-
-
-
+        //tidy
+        Player& operator=(Player&& other) noexcept;
+        Player& operator=(const Player& other);
+        Player(Player&& other) noexcept;
     };    
 }

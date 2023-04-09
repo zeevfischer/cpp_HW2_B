@@ -25,7 +25,7 @@ namespace ariel
         int point_set;
         int draw_count;
     public:
-        Game(Player& p1, Player& p2);
+        Game(Player& player1, Player& player2);
         ~Game();
         void playTurn();
         void playAll();
@@ -33,7 +33,11 @@ namespace ariel
         void printLog();
         void printStats();
         void printLastTurn();
-        Player get_p1();
-        Player get_p2();
+        //tidy
+        Game(const Game& other);
+        Game& operator=(const Game& other);
+        Game(Game&& other) noexcept;
+        Game& operator=(Game&& other) noexcept;
+
     };
 }

@@ -14,13 +14,17 @@ namespace ariel
     // still need to add here game logic but main idea worcks!!!!
     void Game::playTurn()
     {
+        // cout << "hand = " <<  this->current_hand << endl;
         if(this->current_hand > (this->deck.size()/2)-1)
         {
              throw "the game has ende there are no more cards to play" ;
         }
+        if(&this->p1 == &this->p2)
+        {
+            throw "player can not play agenst himself"; 
+        }
         string log;
         //draw 
-        //Noat in print turn/print last turn we will need to check if there is a draw to continue to print the log of the draw !!!! 
         if(this->p1.get_deck()[this->current_hand].get_card_num() == this->p2.get_deck()[this->current_hand].get_card_num())
         {
             this->draw_count ++;
@@ -28,14 +32,43 @@ namespace ariel
                                         p2.get_name() + " played " + this->p2.get_deck()[this->current_hand].print() + ". " + "Draw. ";
             // add to main log
             this->game_log.push_back(move(string_log));
-            // ++ current_hand
-            this->current_hand = this->current_hand + 2;
-            //set player hand
-            this->p1.set_hand(this->current_hand);
-            this->p2.set_hand(this->current_hand);
-            //ever draw adds 4 points to a player
-            this->point_set = this->point_set + 4;
-            playTurn();
+            //case one draw in the middel of the game the -3 is to make shore there will be one more open card !!
+            if(this->current_hand <= (this->deck.size()/2) -3)
+            {
+                // ++ current_hand
+                this->current_hand = this->current_hand + 2;
+                //set player hand
+                this->p1.set_hand(this->current_hand);
+                this->p2.set_hand(this->current_hand);
+                //ever draw adds 4 points to a player
+                this->point_set = this->point_set + 4;
+                playTurn();
+            }
+            //draw and at the very end no down faced card
+            else if(this->current_hand == (this->deck.size()/2) -1)
+            {
+                this->p1.set_point(this->point_set/2);
+                this->p2.set_point(this->point_set/2);
+
+                this->current_hand ++;
+
+                this->p1.set_hand(this->current_hand);
+                this->p2.set_hand(this->current_hand);
+                return;
+            }
+            //draw and there is one faced down card at the very end
+            else if(this->current_hand == (this->deck.size()/2) -2)
+            {
+                this->point_set = this->point_set + 2;
+                this->p1.set_point(this->point_set/2);
+                this->p2.set_point(this->point_set/2);
+
+                this->current_hand +=2;
+
+                this->p1.set_hand(this->current_hand);
+                this->p2.set_hand(this->current_hand);
+                return;
+            }
         }
         else if((this->p1.get_deck()[this->current_hand].get_card_num() > this->p2.get_deck()[this->current_hand].get_card_num() && this->p2.get_deck()[this->current_hand].get_card_num() != 1)
         || (this->p1.get_deck()[this->current_hand].get_card_num() == 1 && this->p2.get_deck()[this->current_hand].get_card_num() != 2)
@@ -120,9 +153,14 @@ namespace ariel
     } 
     void Game::playAll()
     {
-        while (this->current_hand <= (this->deck.size()/2)-1)
+        while (this->current_hand < (this->deck.size()/2))
         {
+            // cout << this->current_hand << "    " << this->deck.size()/2 << endl;
             this->playTurn();
+            // cout<< "p1 points " <<this->get_p1().get_points() << endl;
+            // cout<< "p2 points " <<this->get_p2().get_points() << endl;
+            // this->printLog();
+            // cout << endl;
         }
     }
     void Game::printWiner()
@@ -152,6 +190,10 @@ namespace ariel
             else
             {
                 cout << log << endl;
+            }
+            if(i == this->game_log.size()-1 && log.substr(log.length() - 6) == "Draw. ")
+            {
+                cout << endl;
             }
         }
     }
@@ -197,17 +239,91 @@ namespace ariel
         vector<card> deck;
         vector<string> symbols{"Heart", "Diamond", "Spade", "Club"};
         unsigned long int loc = 0;
-        deck.push_back(card(1,"Heart"));
-        deck.push_back(card(1,"Club"));
-        
-        deck.push_back(card(2,"Club"));
-        deck.push_back(card(3,"Club"));
-
-        deck.push_back(card(4,"Club"));
+        // //0
+        // deck.push_back(card(2,"Heart"));
+        // deck.push_back(card(4,"Club"));
+        //1
         deck.push_back(card(5,"Club"));
-
-        deck.push_back(card(6,"Club"));
+        deck.push_back(card(5,"Club"));
+        //2
+        deck.push_back(card(2,"Club"));//
+        deck.push_back(card(3,"Club"));//
+        //3
+        deck.push_back(card(12,"Club"));
+        deck.push_back(card(12,"Club"));
+        //4
+        deck.push_back(card(5,"Club"));//
+        deck.push_back(card(13,"Club"));//
+        //5
+        deck.push_back(card(3,"Club"));
         deck.push_back(card(7,"Club"));
+        //6
+        deck.push_back(card(3,"Club"));
+        deck.push_back(card(6,"Club"));
+        //7
+        deck.push_back(card(5,"Club"));
+        deck.push_back(card(6,"Club"));
+        //8
+        deck.push_back(card(11,"Club"));
+        deck.push_back(card(1,"Club"));
+        //9
+        deck.push_back(card(10,"Club"));
+        deck.push_back(card(8,"Club"));
+
+
+        //10
+        deck.push_back(card(13,"Club"));
+        deck.push_back(card(12,"Club"));
+        //11
+        deck.push_back(card(8,"Club"));
+        deck.push_back(card(8,"Club"));
+        //12
+        deck.push_back(card(13,"Club"));//
+        deck.push_back(card(5,"Club"));//
+        //13
+        deck.push_back(card(10,"Club"));
+        deck.push_back(card(13,"Club"));
+        //14
+        deck.push_back(card(7,"Club"));
+        deck.push_back(card(11,"Club"));
+        //15
+        deck.push_back(card(9,"Club"));
+        deck.push_back(card(3,"Club"));
+        //16
+        deck.push_back(card(2,"Club"));
+        deck.push_back(card(1,"Club"));
+
+
+        //17
+        deck.push_back(card(11,"Club"));
+        deck.push_back(card(6,"Club"));
+        //18
+        deck.push_back(card(3,"Club"));
+        deck.push_back(card(13,"Club"));
+        //19
+        deck.push_back(card(2,"Club"));
+        deck.push_back(card(9,"Club"));
+        //20
+        deck.push_back(card(4,"Club"));
+        deck.push_back(card(1,"Club"));
+        //21
+        deck.push_back(card(2,"Club"));
+        deck.push_back(card(13,"Club"));
+        //22
+        deck.push_back(card(9,"Club"));
+        deck.push_back(card(6,"Club"));
+        //23
+        deck.push_back(card(1,"Club"));
+        deck.push_back(card(7,"Club"));
+        //24
+        deck.push_back(card(4,"Club"));
+        deck.push_back(card(4,"Club"));
+        //25
+        deck.push_back(card(5,"Club"));//
+        deck.push_back(card(13,"Club"));//
+        //26
+        deck.push_back(card(12,"Club"));
+        deck.push_back(card(10,"Club"));
         return deck;
     }
     vector<card> creat_deck()
@@ -260,10 +376,6 @@ namespace ariel
     {
         // this->p1 = Player(p1);
         // this->p2 = Player(p2);
-        if(&p1 == &p2)
-        {
-            throw "player can not play agenst himself"; 
-        }
         if(this->p1.get_state() == true || this->p2.get_state() == true)
         {
             throw "one of the players is currently playing a game and can not join this one" ;
@@ -272,6 +384,7 @@ namespace ariel
         this->draw_count = 0;
         this->point_set = 2;
         this->deck = creat_deck();
+        // this->deck = test_deck();
         this->p1.set_state(true);
         this->p2.set_state(true);
         devide_cards(this->p1, this->p2, this->deck);
@@ -281,12 +394,64 @@ namespace ariel
         this->p1.set_state(false);
         this->p2.set_state(false);
     }
-    Player Game::get_p1()
+    //tidy
+    //Copy Constructor
+    Game::Game(const Game& other) :
+    p1(other.p1),
+    p2(other.p2),
+    game_log(other.game_log),
+    deck(other.deck),
+    current_hand(other.current_hand),
+    point_set(other.point_set),
+    draw_count(other.draw_count)
     {
-        return this->p1;
     }
-    Player Game::get_p2()
+    //Copy Assignment Operator
+    Game& Game::operator=(const Game& other)
     {
-        return this->p2;
+        if(this != &other)
+        {
+            this->p1 = other.p1;
+            this->p2 = other.p2;
+            this->game_log = other.game_log;
+            this->deck = other.deck;
+            this->current_hand = other.current_hand;
+            this->point_set = other.point_set;
+            this->draw_count = other.draw_count;
+        }
+        return *this;
+    }
+    //Move Constructor
+    Game::Game(Game&& other) noexcept:
+    p1(other.p1),
+    p2(other.p2),
+    game_log(move(other.game_log)),
+    deck(move(other.deck)),
+    current_hand(other.current_hand),
+    point_set(other.point_set),
+    draw_count(other.draw_count)
+    {
+        other.current_hand = 0;
+        other.point_set = 0;
+        other.draw_count = 0;
+    }  
+    //Move Assignment Operator
+    Game& Game::operator=(Game&& other) noexcept
+    {
+        if(this != &other)
+        {
+            this->p1 = other.p1;
+            this->p2 = other.p2;
+            this->game_log = move(other.game_log);
+            this->deck = move(other.deck);
+            this->current_hand = other.current_hand;
+            this->point_set = other.point_set;
+            this->draw_count = other.draw_count;
+
+            other.current_hand = 0;
+            other.point_set = 0;
+            other.draw_count = 0;
+        }
+        return *this;
     }
 }

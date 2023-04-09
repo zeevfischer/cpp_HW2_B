@@ -52,4 +52,33 @@ namespace ariel
         string str = temp.str();
         return str + " of " + symbol;
     }
+    //tidy
+    card& card::operator=(const card& other)
+    {
+        if (this != &other)
+        {
+            this->card_num = other.card_num;
+            this->symbol = other.symbol;
+        }
+        return *this;
+    }
+
+    card::card(card&& other)noexcept
+    {
+        this->card_num = other.card_num;
+        this->symbol = other.symbol;
+        other.card_num = 0;
+        other.symbol = "";
+    }
+    card& card::operator=(card&& other)noexcept
+{
+    if (this != &other)
+    {
+        this->card_num = other.card_num;
+        this->symbol = other.symbol;
+        other.card_num = 0;
+        other.symbol = "";
+    }
+    return *this;
+}
 }
